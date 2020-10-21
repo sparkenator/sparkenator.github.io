@@ -1,6 +1,6 @@
 <html>
 <head>
-  <title>Victorian Subdivisions</title>
+  <title>NSW and Victorian Subdivisions</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"/>
   <link rel="stylesheet" href="css/MarkerCluster.css"/>
   <link rel="stylesheet" href="css/MarkerCluster.Default.css"/>
@@ -18,7 +18,7 @@
 </head>
 <body>
 
-	<h1>Victorian Subdivisions</h1>
+	<h1>NSW and Victorian Subdivisions</h1>
 	<img src="images/intrax.png" alt="Intrax Logo" style="width:180px;height:54px;
             position: absolute;
             left: 0px;
@@ -57,7 +57,7 @@
 		};
 		// initialize the map
 		var map = L.map('map', {scrollWheelZoom: true,
-								layers: [Satellite]}).setView([-37.25, 144.87], 8);
+								layers: [Satellite]}).setView([-33, 147], 6);
 		L.control.layers(baseMaps).addTo(map);
 		/*
 		mapLink = 
@@ -123,16 +123,40 @@
 			}  ).addTo(map);
 			});
 
+		$.getJSON("nswGovtAreas1.geojson",function(LGAs){
+			L.geoJson( LGAs  , {
+				style: function(feature){
+				return { color: "#000000", weight: 1, fillColor: "#76D6DF", fillOpacity: .2 };
+				}
+			}  ).addTo(map);
+		});
+		$.getJSON("nswGovtAreas2.geojson",function(LGAs){
+			L.geoJson( LGAs  , {
+				style: function(feature){
+				return { color: "#000000", weight: 1, fillColor: "#76D6DF", fillOpacity: .2 };
+				}
+			}  ).addTo(map);
+		});
+		$.getJSON("nswGovtAreas3.geojson",function(LGAs){
+			L.geoJson( LGAs  , {
+				style: function(feature){
+				return { color: "#000000", weight: 1, fillColor: "#76D6DF", fillOpacity: .2 };
+				}
+			}  ).addTo(map);
+		});
+		$.getJSON("nswGovtAreas4.geojson",function(LGAs){
+			L.geoJson( LGAs  , {
+				style: function(feature){
+				return { color: "#000000", weight: 1, fillColor: "#76D6DF", fillOpacity: .2 };
+				}
+			}  ).addTo(map);
+		});
+
 		// Set pin icon
 
 		
 		// load GeoJSON from an external file
-		//var allSubs = L.layerGroup()
-		//var up100 = L.layerControl()
-		/*var up80 = L.layerControl()
-		var up60 = L.layerControl()
-		var up40 = L.layerControl()
-		var up20 = L.layerControl()*/
+
 		$.getJSON("vic_plans_aug2020_aug2019.geojson",function(data){
 				var houseIcon = L.icon({
 				iconUrl: 'real-estate.png',
@@ -143,7 +167,7 @@
 						var marker = L.marker(latlng,{icon: houseIcon});
 					
 						marker.bindPopup("Plan Number: " + feature.properties.PlanNumber + '<br/>Number Of Lots: ' + feature.properties.LotNumber
-							+ '<br/>Locaility: ' + feature.properties.locality + '<br/>LGA: ' + feature.properties.LGA);
+							+ '<br/>Locality: ' + feature.properties.locality + '<br/>LGA: ' + feature.properties.LGA);
 						return marker;
 						var layerControl = new L.Control.Layers(null, {
 						'Subdivisions': marker
@@ -156,37 +180,31 @@
 				map.addLayer(clusters);
 			
 			});
-		
-		
-		/*
-		function onEachFeature(feature, layer) {
-			var popupContent = "<p>DaTerra Web</p>";
-			console.log(feature.properties["PlanNumber"])
-			if (feature.properties && feature.properties.popupContent) {
-				popupContent += feature.properties.popupContent;
-				console.log(popupContent)
+
+		$.getJSON("nsw_plans_sep2018_oct2019.geojson",function(data){
+			var houseIcon = L.icon({
+			iconUrl: 'real-estate.png',
+			iconSize: [30,45]
+			});
+			var subdivisions = L.geoJson(data,{
+				pointToLayer: function(feature,latlng){
+					var marker = L.marker(latlng,{icon: houseIcon});
+				
+					marker.bindPopup("Plan Number: " + feature.properties.PlanNumber + '<br/>Number Of Lots: ' + feature.properties.LotNumber
+						+ '<br/>County: ' + feature.properties.County + '<br/>LGA: ' + feature.properties.LGA);
+					return marker;
+					var layerControl = new L.Control.Layers(null, {
+					'Subdivisions': marker
+					}).addTo(map);
 				}
-				layer.bindPopup(popupContent);
-			}
-		*/
-		/*
-		$.getJSON("rodents.geojson",function(data){
-			var ratIcon = L.icon({
-			iconUrl: 'http://andywoodruff.com/maptime-leaflet/rat.png',
-			iconSize: [60,50]
+			//}
 			});
-			var rodents = L.geoJson(data,{
-			pointToLayer: function(feature,latlng){
-				var marker = L.marker(latlng,{icon: ratIcon});
-				marker.bindPopup(feature.properties.Location + '<br/>' + feature.properties.OPEN_DT);
-				return marker;
-			}
-			});
-			
-		var clusters = L.markerClusterGroup();
-		clusters.addLayer(subdivisions);
-		map.addLayer(clusters);
-		*/
+			var clusters = L.markerClusterGroup();
+			clusters.addLayer(subdivisions);
+			map.addLayer(clusters);
+		
+		});
+		
 	
   	</script>
 </body>
